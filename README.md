@@ -1,0 +1,2 @@
+# AI-powered-Infrastructure-Intelligence-and-Opportunity-Mapping-System
+AI-powered Infrastructure Intelligence &amp; Opportunity Mapping System that collects infrastructure news, extracts project details using NLP, visualizes opportunities on GIS maps, tracks project lifecycles, and discovers similar projects through semantic search, helping consultancy firms identify and pursue business opportunities efficiently.
