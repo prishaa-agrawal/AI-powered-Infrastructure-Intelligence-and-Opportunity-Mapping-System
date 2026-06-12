@@ -171,6 +171,118 @@ with c3:
         f"Low: {rank_counts.get('🔴 Low', 0)}"
     )
 
+st.subheader("📝 Executive Summary")
+
+if st.button("Generate Executive Summary"):
+
+    top_agency = (
+        df["agency"]
+        .replace("", pd.NA)
+        .dropna()
+        .value_counts()
+        .idxmax()
+    )
+
+    top_project = (
+        df.sort_values(
+            "opportunity_score",
+            ascending=False
+        )
+        .iloc[0]
+    )
+
+    common_type = (
+        df["project_type"]
+        .value_counts()
+        .idxmax()
+    )
+
+    summary = f"""
+    ## Infrastructure Intelligence Report
+
+    A total of **{len(df)}** infrastructure projects were analyzed across multiple sectors including railways, transportation, and public infrastructure.
+
+    **{top_agency}** emerged as the most active agency in the current dataset.
+
+    The most common project category is **{common_type}**.
+
+    ## Highest-Ranked Opportunity
+
+    **{top_project['project_name']}**
+
+    **Agency:** {top_project['agency']}
+
+    **Opportunity Score:** {top_project['opportunity_score']}
+
+    ## Key Observation
+
+    Transportation and large-scale infrastructure projects continue to dominate the current project pipeline, with public sector agencies contributing the majority of high-opportunity initiatives.
+    """
+
+    st.markdown(summary)
+
+KNOWN_AGENCIES = [
+    "Indian Railways",
+    "ADB",
+    "World Bank",
+    "L&T",
+    "Larsen & Toubro",
+    "RailTel",
+    "Google",
+    "Uber",
+    "NHIDCL",
+    "MMRDA",
+    "NLC India"
+]
+
+st.subheader("🏢 Agency Influence Map")
+
+agency_df = df.copy()
+
+agency_df["agency"] = (
+    agency_df["agency"]
+    .fillna("")
+    .str.strip()
+)
+
+agency_df = agency_df[
+    agency_df["agency"].isin(KNOWN_AGENCIES)
+]
+
+agency_counts = (
+    agency_df["agency"]
+    .value_counts()
+    .reset_index()
+)
+
+agency_counts.columns = [
+    "agency",
+    "projects"
+]
+fig_agency = px.bar(
+    agency_counts,
+    x="projects",
+    y="agency",
+    orientation="h",
+    color="projects",
+    template="plotly_dark",
+    title="Top Infrastructure Agencies by Project Count",
+    color_continuous_scale="viridis"
+)
+
+fig_agency.update_layout(
+    xaxis_title="Number of Projects",
+    yaxis_title="Agency",
+    height=300,
+    coloraxis_showscale=False
+)
+
+
+st.plotly_chart(
+    fig_agency,
+    use_container_width=True
+)
+
 st.subheader("🥇 Opportunity Leaderboard")
 
 leaderboard = df.sort_values(
@@ -226,9 +338,9 @@ fig_bar = px.bar(
     x="count",
     y="project_type",
     orientation="h",
+    color="count",
     template="plotly_dark",
-    title="Project Type Distribution",
-    color="count"
+    title="Project Type Distribution"
 )
 
 st.plotly_chart(
