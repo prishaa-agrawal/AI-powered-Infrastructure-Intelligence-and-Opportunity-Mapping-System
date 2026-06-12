@@ -10,7 +10,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-st.title("🏗️ AI-Powered Infrastructure Intelligence System")
+st.title("🏗️ AI-Powered Infrastructure Intelligence & Opportunity Mapping System")
 
 conn = sqlite3.connect("database/news.db")
 
@@ -35,10 +35,24 @@ df["project_name"] = (
     .str[0]
 )
 
-st.sidebar.header("Filters")
+df["opportunity_score"] = (
+    df["opportunity_score"]
+    .fillna(0)
+    .astype(int)
+)
+
+df["rank"] = df["opportunity_score"].apply(
+    lambda x: "🟢 High"
+    if x >= 70
+    else "🟠 Medium"
+    if x >= 40
+    else "🔴 Low"
+)
+
+st.sidebar.title("Filters")
 
 project_types = ["All"] + sorted(
-    list(df["project_type"].dropna().unique())
+    df["project_type"].dropna().unique().tolist()
 )
 
 selected_type = st.sidebar.selectbox(
@@ -47,7 +61,7 @@ selected_type = st.sidebar.selectbox(
 )
 
 agencies = ["All"] + sorted(
-    list(df["agency"].dropna().unique())
+    df["agency"].dropna().unique().tolist()
 )
 
 selected_agency = st.sidebar.selectbox(
@@ -74,7 +88,11 @@ if selected_agency != "All":
 if search_project:
     filtered_df = filtered_df[
         filtered_df["project_name"]
-        .str.contains(search_project, case=False, na=False)
+        .str.contains(
+            search_project,
+            case=False,
+            na=False
+        )
     ]
 
 col1, col2, col3, col4 = st.columns(4)
@@ -94,12 +112,12 @@ with col2:
 with col3:
     st.metric(
         "Agencies",
-        df["agency"].nunique()
+        df["agency"].replace("", pd.NA).dropna().nunique()
     )
 
 with col4:
     st.metric(
-        "Average Score",
+        "Avg Score",
         round(df["opportunity_score"].mean(), 1)
     )
 
@@ -110,24 +128,78 @@ st.download_button(
     mime="text/csv"
 )
 
-st.subheader("🏆 Top 5 Opportunity Projects")
+st.subheader("🏆 Top Opportunity Projects")
 
 top5 = df.sort_values(
     by="opportunity_score",
     ascending=False
 ).head(5)
 
-for _, row in top5.iterrows():
+card_cols = st.columns(5)
 
-    st.info(
-        f"""
-        Project: {row['project_name']}
+for col, (_, row) in zip(card_cols, top5.iterrows()):
 
-        Opportunity Score: {row['opportunity_score']}
+    with col:
+        st.markdown(
+            f"""
+            ### ⭐ {int(row['opportunity_score'])}
 
-        Agency: {row['agency']}
-        """
+            **{row['project_name'][:50]}**
+
+            🏢 {row['agency']}
+            """
+        )
+
+st.subheader("📌 Opportunity Categories")
+
+rank_counts = df["rank"].value_counts()
+
+c1, c2, c3 = st.columns(3)
+
+with c1:
+    st.success(
+        f"High: {rank_counts.get('🟢 High', 0)}"
     )
+
+with c2:
+    st.warning(
+        f"Medium: {rank_counts.get('🟠 Medium', 0)}"
+    )
+
+with c3:
+    st.error(
+        f"Low: {rank_counts.get('🔴 Low', 0)}"
+    )
+
+st.subheader("🥇 Opportunity Leaderboard")
+
+leaderboard = df.sort_values(
+    by="opportunity_score",
+    ascending=False
+).head(10)
+
+leaderboard["project_name"] = (
+    leaderboard["project_name"]
+    .str.slice(0, 80)
+)
+
+st.dataframe(
+    leaderboard[
+        [
+            "project_name",
+            "agency",
+            "project_type",
+            "opportunity_score",
+            "rank"
+        ]
+    ],
+    use_container_width=True
+)
+
+filtered_df = filtered_df.sort_values(
+    by="opportunity_score",
+    ascending=False
+)
 
 st.subheader("📋 Infrastructure Projects")
 
@@ -138,14 +210,29 @@ st.dataframe(
 
 st.subheader("📊 Project Type Distribution")
 
-fig_pie = px.pie(
-    df,
-    names="project_type",
-    title="Project Type Distribution"
+project_counts = (
+    df["project_type"]
+    .value_counts()
+    .reset_index()
+)
+
+project_counts.columns = [
+    "project_type",
+    "count"
+]
+
+fig_bar = px.bar(
+    project_counts,
+    x="count",
+    y="project_type",
+    orientation="h",
+    template="plotly_dark",
+    title="Project Type Distribution",
+    color="count"
 )
 
 st.plotly_chart(
-    fig_pie,
+    fig_bar,
     use_container_width=True
 )
 
@@ -154,8 +241,15 @@ st.subheader("📈 Opportunity Score Distribution")
 fig_hist = px.histogram(
     df,
     x="opportunity_score",
+    color="rank",
     nbins=10,
-    title="Opportunity Score Distribution"
+    template="plotly_dark",
+    title="Opportunity Score Distribution",
+    color_discrete_map={
+        "🟢 High": "#2ecc71",
+        "🟠 Medium": "#f39c12",
+        "🔴 Low": "#e74c3c"
+    }
 )
 
 st.plotly_chart(
@@ -169,10 +263,15 @@ for _, row in filtered_df.head(20).iterrows():
 
     with st.expander(row["project_name"]):
 
-        st.write(f"**Agency:** {row['agency']}")
-        st.write(f"**Project Type:** {row['project_type']}")
-        st.write(f"**Budget:** {row['budget']}")
-        st.write(f"**Location:** {row['location']}")
-        st.write(f"**Opportunity Score:** {row['opportunity_score']}")
+        st.write("**Agency:**", row["agency"])
+        st.write("**Project Type:**", row["project_type"])
+        st.write("**Budget:**", row["budget"])
+        st.write("**Location:**", row["location"])
+        st.write("**Opportunity Score:**", row["opportunity_score"])
+        st.write("**Rank:**", row["rank"])
 
-st.success("Dashboard Loaded Successfully!")
+st.divider()
+
+st.caption(
+    "AI-Powered Infrastructure Intelligence & Opportunity Mapping System"
+)
