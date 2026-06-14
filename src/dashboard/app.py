@@ -318,7 +318,7 @@ st.plotly_chart(
 # PROJECT SEARCH & RECOMMENDATION ENGINE
 # ==========================================
 
-st.subheader("🔍 Project Search & Recommendation Engine")
+st.subheader("🎯 Opportunity Recommendation Engine")
 
 search_query = st.text_input(
     "Enter Keyword (e.g. Railway, Infrastructure, Metro)"
@@ -426,6 +426,16 @@ location_df["location"] = (
     .str.strip()
 )
 
+location_df["location"] = (
+    location_df["location"]
+    .replace({
+        "India, India": "India",
+        "South India": "India",
+        "NE": "North East India",
+        "Northeast": "North East India"
+    })
+)
+
 location_counts = (
     location_df["location"]
     .value_counts()
@@ -465,7 +475,7 @@ st.plotly_chart(
 # LOCATION INSIGHTS
 # ==========================================
 
-top_location = (
+top_location = str (
     location_df["location"]
     .value_counts()
     .idxmax()
@@ -479,25 +489,21 @@ total_locations = (
 col1, col2 = st.columns(2)
 
 with col1:
-    st.info(
-        f"📍 Most Active Location: {top_location}"
+    st.metric(
+        "📍 Most Active Location",
+        top_location
     )
 
 with col2:
-    st.info(
-        f"🌍 Unique Locations: {total_locations}"
+    st.metric(
+        "🌍 Unique Locations",
+        total_locations
     )
 
 st.dataframe(
     location_counts,
     use_container_width=True,
     hide_index=True
-)
-st.subheader("📋 Infrastructure Projects")
-
-st.dataframe(
-    filtered_df,
-    use_container_width=True
 )
 
 st.subheader("📊 Project Type Distribution")
@@ -528,6 +534,67 @@ st.plotly_chart(
     use_container_width=True
 )
 
+# ==========================================
+# SECTOR ANALYTICS
+# ==========================================
+
+st.subheader("📈 Sector Opportunity Analysis")
+
+sector_scores = (
+    df.groupby("project_type")["opportunity_score"]
+    .mean()
+    .reset_index()
+)
+
+sector_scores["opportunity_score"] = (
+    sector_scores["opportunity_score"]
+    .round(1)
+)
+
+fig_sector = px.bar(
+    sector_scores,
+    x="project_type",
+    y="opportunity_score",
+    color="opportunity_score",
+    template="plotly_dark",
+    title="Average Opportunity Score by Sector",
+    color_continuous_scale="viridis"
+)
+
+fig_sector.update_layout(
+    xaxis_title="Project Type",
+    yaxis_title="Average Opportunity Score",
+    coloraxis_showscale=False,
+    height=450
+)
+
+st.plotly_chart(
+    fig_sector,
+    use_container_width=True
+)
+
+highest_sector = (
+    sector_scores.sort_values(
+        "opportunity_score",
+        ascending=False
+    )
+    .iloc[0]
+)
+
+st.success(
+    f"🏆 Highest Opportunity Sector: "
+    f"{highest_sector['project_type']} "
+    f"({highest_sector['opportunity_score']})"
+)
+st.subheader("📂 Infrastructure Project Explorer")
+
+st.dataframe(
+    filtered_df,
+    use_container_width=True,
+    hide_index=True
+)
+
+
 st.subheader("📈 Opportunity Score Distribution")
 
 fig_hist = px.histogram(
@@ -548,19 +615,57 @@ st.plotly_chart(
     fig_hist,
     use_container_width=True
 )
+st.write("Filtered Rows:", len(filtered_df))
+st.subheader("📑 Detailed Project Information")
 
-st.subheader("🔍 Project Details")
+if filtered_df.empty:
+    st.warning(
+        "No projects found. Try clearing the filters or search box."
+    )
 
-for _, row in filtered_df.head(20).iterrows():
+else:
 
-    with st.expander(row["project_name"]):
+    st.success(
+        f"Showing {len(filtered_df)} projects"
+    )
 
-        st.write("**Agency:**", row["agency"])
-        st.write("**Project Type:**", row["project_type"])
-        st.write("**Budget:**", row["budget"])
-        st.write("**Location:**", row["location"])
-        st.write("**Opportunity Score:**", row["opportunity_score"])
-        st.write("**Rank:**", row["rank"])
+    for _, row in filtered_df.iterrows():
+
+        project_name = str(
+            row.get("project_name", "Unnamed Project")
+        )
+
+        with st.expander(project_name):
+
+            st.write(
+                "**Agency:**",
+                row.get("agency", "N/A")
+            )
+
+            st.write(
+                "**Project Type:**",
+                row.get("project_type", "N/A")
+            )
+
+            st.write(
+                "**Budget:**",
+                row.get("budget", "N/A")
+            )
+
+            st.write(
+                "**Location:**",
+                row.get("location", "N/A")
+            )
+
+            st.write(
+                "**Opportunity Score:**",
+                row.get("opportunity_score", 0)
+            )
+
+            st.write(
+                "**Rank:**",
+                row.get("rank", "N/A")
+            )
 
 st.divider()
 
