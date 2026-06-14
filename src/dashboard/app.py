@@ -410,6 +410,89 @@ if search_query:
         st.warning(
             "No matching projects found."
         )
+
+# ==========================================
+# LOCATION ANALYTICS
+# ==========================================
+
+st.subheader("📍 Location Analytics")
+
+location_df = df.copy()
+
+location_df["location"] = (
+    location_df["location"]
+    .fillna("Unknown")
+    .astype(str)
+    .str.strip()
+)
+
+location_counts = (
+    location_df["location"]
+    .value_counts()
+    .head(10)
+    .reset_index()
+)
+
+location_counts.columns = [
+    "location",
+    "projects"
+]
+
+fig_location = px.bar(
+    location_counts,
+    x="projects",
+    y="location",
+    orientation="h",
+    color="projects",
+    template="plotly_dark",
+    title="Top Infrastructure Opportunity Locations",
+    color_continuous_scale="viridis"
+)
+
+fig_location.update_layout(
+    xaxis_title="Number of Projects",
+    yaxis_title="Location",
+    coloraxis_showscale=False,
+    height=450
+)
+
+st.plotly_chart(
+    fig_location,
+    use_container_width=True
+)
+
+# ==========================================
+# LOCATION INSIGHTS
+# ==========================================
+
+top_location = (
+    location_df["location"]
+    .value_counts()
+    .idxmax()
+)
+
+total_locations = (
+    location_df["location"]
+    .nunique()
+)
+
+col1, col2 = st.columns(2)
+
+with col1:
+    st.info(
+        f"📍 Most Active Location: {top_location}"
+    )
+
+with col2:
+    st.info(
+        f"🌍 Unique Locations: {total_locations}"
+    )
+
+st.dataframe(
+    location_counts,
+    use_container_width=True,
+    hide_index=True
+)
 st.subheader("📋 Infrastructure Projects")
 
 st.dataframe(
