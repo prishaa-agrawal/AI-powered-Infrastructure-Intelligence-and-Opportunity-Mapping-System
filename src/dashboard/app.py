@@ -314,36 +314,102 @@ st.plotly_chart(
     use_container_width=True
 )
 
-st.subheader("🥇 Opportunity Leaderboard")
+# ==========================================
+# PROJECT SEARCH & RECOMMENDATION ENGINE
+# ==========================================
 
-leaderboard = df.sort_values(
-    by="opportunity_score",
-    ascending=False
-).head(10)
+st.subheader("🔍 Project Search & Recommendation Engine")
 
-leaderboard["project_name"] = (
-    leaderboard["project_name"]
-    .str.slice(0, 80)
+search_query = st.text_input(
+    "Enter Keyword (e.g. Railway, Infrastructure, Metro)"
 )
 
-st.dataframe(
-    leaderboard[
-        [
-            "project_name",
-            "agency",
-            "project_type",
-            "opportunity_score",
-            "rank"
-        ]
-    ],
-    use_container_width=True
-)
+if search_query:
 
-filtered_df = filtered_df.sort_values(
-    by="opportunity_score",
-    ascending=False
-)
+    recommendations = df[
+        (
+            df["project_name"]
+            .str.contains(
+                search_query,
+                case=False,
+                na=False
+            )
+        )
+        |
+        (
+            df["project_type"]
+            .str.contains(
+                search_query,
+                case=False,
+                na=False
+            )
+        )
+        |
+        (
+            df["agency"]
+            .str.contains(
+                search_query,
+                case=False,
+                na=False
+            )
+        )
+    ]
 
+    recommendations = recommendations.sort_values(
+        by="opportunity_score",
+        ascending=False
+    )
+
+    if len(recommendations) > 0:
+
+        st.success(
+            f"Found {len(recommendations)} matching projects"
+        )
+
+        st.subheader(
+            "🎯 Top Recommended Opportunities"
+        )
+
+        top_recommendations = (
+            recommendations.head(5)
+        )
+        st.dataframe(
+         top_recommendations[
+            [
+                 "project_name",
+                 "agency",
+                "project_type",
+                "opportunity_score",
+                 "rank"
+             ]
+        ],
+        use_container_width=True,
+        hide_index=True
+          )
+
+        st.subheader(
+            "📋 All Matching Projects"
+        )
+
+        st.dataframe(
+            recommendations[
+                [
+                    "project_name",
+                    "agency",
+                    "project_type",
+                    "opportunity_score",
+                    "rank"
+                ]
+            ],
+            use_container_width=True,
+            hide_index=True
+        )
+
+    else:
+
+        st.warning(
+            "No matching projects found."
+        )
 st.subheader("📋 Infrastructure Projects")
 
 st.dataframe(
