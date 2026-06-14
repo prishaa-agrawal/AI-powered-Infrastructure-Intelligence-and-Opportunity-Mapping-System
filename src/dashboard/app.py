@@ -2,6 +2,19 @@ import streamlit as st
 import sqlite3
 import pandas as pd
 import plotly.express as px
+import sys
+import os
+
+sys.path.append(
+    os.path.abspath(
+        os.path.join(
+            os.path.dirname(__file__),
+            ".."
+        )
+    )
+)
+
+from reports.generate_report import generate_pdf
 
 st.set_page_config(
     page_title="Infrastructure Intelligence Platform",
@@ -234,6 +247,24 @@ KNOWN_AGENCIES = [
     "MMRDA",
     "NLC India"
 ]
+
+st.subheader("📄 PDF Report")
+
+if st.button("Generate PDF Report"):
+
+    generate_pdf()
+
+    with open(
+        "src/reports/infrastructure_report.pdf",
+        "rb"
+    ) as file:
+
+        st.download_button(
+            label="⬇ Download Report",
+            data=file,
+            file_name="infrastructure_report.pdf",
+            mime="application/pdf"
+        )
 
 st.subheader("🏢 Agency Influence Map")
 
