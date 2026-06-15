@@ -29,6 +29,7 @@ def clean_text(text):
 
 
 def generate_pdf():
+    
 
     conn = sqlite3.connect("database/news.db")
 
@@ -44,6 +45,9 @@ def generate_pdf():
     df = pd.read_sql_query(query, conn)
 
     conn.close()
+    if df.empty:
+     print("No project data available.")
+     return
 
     df["agency"] = df["agency"].fillna("Unknown")
     df["project_type"] = df["project_type"].fillna("Unknown")
@@ -53,12 +57,17 @@ def generate_pdf():
         .astype(int)
     )
 
-    top_agency = (
+    agency_counts_all = (
         df["agency"]
         .replace("", pd.NA)
         .dropna()
         .value_counts()
-        .idxmax()
+    )
+
+    top_agency = (
+        agency_counts_all.idxmax()
+        if not agency_counts_all.empty
+        else "Unknown"
     )
 
     common_type = (

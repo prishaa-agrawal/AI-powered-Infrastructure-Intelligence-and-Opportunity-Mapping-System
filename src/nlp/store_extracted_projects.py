@@ -26,9 +26,6 @@ for article in articles:
     project_type = extract_project_type(title)
     agencies = extract_agency(title)
 
-    # Debug prints
-    print("\nTITLE:", title)
-    print("AGENCIES FOUND:", agencies)
 
     # Use agency extractor if it finds something,
     # otherwise fall back to spaCy organizations

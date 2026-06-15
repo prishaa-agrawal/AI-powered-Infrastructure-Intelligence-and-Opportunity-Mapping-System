@@ -615,7 +615,7 @@ st.plotly_chart(
     fig_hist,
     use_container_width=True
 )
-st.write("Filtered Rows:", len(filtered_df))
+
 st.subheader("📑 Detailed Project Information")
 
 if filtered_df.empty:

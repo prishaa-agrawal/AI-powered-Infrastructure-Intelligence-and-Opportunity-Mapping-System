@@ -11,7 +11,7 @@ def extract_agency(text):
         "GAIL",
         "NPCIL",
         "DMRC",
-        "PM Modi"
+        "PM Modi",
         "PM India",
         "L&T",
         "Larsen & Toubro"
@@ -26,10 +26,3 @@ def extract_agency(text):
 
     return found
 
-
-# Testing
-if __name__ == "__main__":
-
-    text = "India Secures $500 Million ADB Loan for Green Infrastructure Projects"
-
-    print(extract_agency(text))

@@ -93,7 +93,7 @@ net.barnes_hut()
 
 net.write_html(
     "knowledge_graph.html",
-    open_browser=True
+    open_browser=False
 )
 
 print("Knowledge Graph Created Successfully!")
