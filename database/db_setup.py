@@ -42,7 +42,15 @@ CREATE TABLE IF NOT EXISTS high_opportunities (
 )
 """)
 
-
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS alerts (
+    alert_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    project_name TEXT,
+    priority TEXT,
+    alert_message TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+)
+""")
 conn.commit()
 conn.close()
 

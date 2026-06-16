@@ -5,6 +5,7 @@ import plotly.express as px
 import sys
 import os
 from opportunity_dashboard import show_opportunities
+from alerts_dashboard import show_alerts
 
 sys.path.append(
     os.path.abspath(
@@ -135,6 +136,7 @@ with col4:
         round(df["opportunity_score"].mean(), 1)
     )
 show_opportunities()
+show_alerts()
 
 st.download_button(
     label="⬇ Download Project Data",
