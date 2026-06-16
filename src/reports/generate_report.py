@@ -1,7 +1,16 @@
+import sys
+import os
+
+sys.path.append(
+    os.path.abspath(
+        os.path.join(os.path.dirname(__file__), "../..")
+    )
+)
 from fpdf import FPDF
 from datetime import datetime
 import sqlite3
 import pandas as pd
+from config import DATABASE_PATH
 
 
 def clean_text(text):
@@ -31,7 +40,7 @@ def clean_text(text):
 def generate_pdf():
     
 
-    conn = sqlite3.connect("database/news.db")
+    conn = sqlite3.connect(DATABASE_PATH)
 
     query = """
     SELECT
@@ -46,8 +55,8 @@ def generate_pdf():
 
     conn.close()
     if df.empty:
-     print("No project data available.")
-     return
+        print("No project data available.")
+        return
 
     df["agency"] = df["agency"].fillna("Unknown")
     df["project_type"] = df["project_type"].fillna("Unknown")

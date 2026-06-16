@@ -1,11 +1,20 @@
+import sys
+import os
+
+sys.path.append(
+    os.path.abspath(
+        os.path.join(os.path.dirname(__file__), "../..")
+    )
+)
 import sqlite3
 import feedparser
+from config import DATABASE_PATH, RSS_URL
 
-rss_url = "https://news.google.com/rss/search?q=infrastructure+projects+india"
+feed = feedparser.parse(RSS_URL)
 
-feed = feedparser.parse(rss_url)
 
-conn = sqlite3.connect("database/news.db")
+
+conn = sqlite3.connect(DATABASE_PATH)
 cursor = conn.cursor()
 
 for article in feed.entries:

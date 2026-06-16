@@ -1,9 +1,18 @@
+import sys
+import os
+
+sys.path.append(
+    os.path.abspath(
+        os.path.join(os.path.dirname(__file__), "../..")
+    )
+)
 import sqlite3
 
 from opportunity_score import calculate_score
 
-# Connect to database
-conn = sqlite3.connect("database/news.db")
+from config import DATABASE_PATH
+
+conn = sqlite3.connect(DATABASE_PATH)
 
 cursor = conn.cursor()
 

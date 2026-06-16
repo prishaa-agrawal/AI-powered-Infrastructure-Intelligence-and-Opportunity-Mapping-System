@@ -1,12 +1,22 @@
+import sys
+import os
+
+sys.path.append(
+    os.path.abspath(
+        os.path.join(os.path.dirname(__file__), "../..")
+    )
+)
+
 import sqlite3
 
 from entity_extractor import extract_entities
 from budget_extractor import extract_budget
 from project_type_extractor import extract_project_type
 from agency_extractor import extract_agency
+from config import DATABASE_PATH
 
 # Connect to database
-conn = sqlite3.connect("database/news.db")
+conn = sqlite3.connect(DATABASE_PATH)
 cursor = conn.cursor()
 
 # Clear old records to avoid duplicates
