@@ -183,7 +183,7 @@ project/
 ![Sector Analytics](docs/screenshots/project_type_and_sector_analytics.png)
 
 ### Project Explorer and Opportunity Score Distribution
-![Project Explorer](docs/screenshots/project_explorer_and_opportunity_score_distribution.png)
+![Project Explorer](docs/screenshots/project_explorer_and_opportunity_score.png)
 
 ### Detailed Project Information
 ![Detailed Project Information](docs/screenshots/detailed_project_info.png)
