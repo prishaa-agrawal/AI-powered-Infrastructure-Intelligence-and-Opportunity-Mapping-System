@@ -29,6 +29,20 @@ CREATE TABLE IF NOT EXISTS projects (
 )
 """)
 
+
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS high_opportunities (
+    opportunity_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    project_name TEXT,
+    agency TEXT,
+    project_type TEXT,
+    score INTEGER,
+    priority TEXT,
+    reason TEXT
+)
+""")
+
+
 conn.commit()
 conn.close()
 
