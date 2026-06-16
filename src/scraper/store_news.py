@@ -13,19 +13,28 @@ for article in feed.entries:
     title = article.title
     link = article.link
 
-    cursor.execute("""
-    INSERT INTO news_articles
-    (title, date, source, content, url)
-    VALUES (?, ?, ?, ?, ?)
-    """, (
-        title,
-        "",
-        "Google News",
-        "",
-        link
-    ))
+    cursor.execute(
+        "SELECT COUNT(*) FROM news_articles WHERE url = ?",
+        (link,)
+    )
+
+    exists = cursor.fetchone()[0]
+
+    if exists == 0:
+
+        cursor.execute("""
+        INSERT INTO news_articles
+        (title, date, source, content, url)
+        VALUES (?, ?, ?, ?, ?)
+        """, (
+            title,
+            "",
+            "Google News",
+            "",
+            link
+        ))
 
 conn.commit()
 conn.close()
 
-print(f"{len(feed.entries)} articles stored successfully.")
+print(f"{len(feed.entries)} articles processed successfully.")

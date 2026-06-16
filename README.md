@@ -164,6 +164,30 @@ project/
 
 ---
 
+
+## Dashboard Screenshots
+
+### Executive Dashboard
+![Dashboard](docs/screenshots/dashboard_home.png)
+
+### Recommendation Engine
+![Recommendation Engine](docs/screenshots/recommendation_engine.png)
+
+### Project and Agency Filter
+![Project and Agency Filter](docs/screenshots/project_and_agency_filter.png)
+
+### Location Analytics
+![Location Analytics](docs/screenshots/location_analytics.png)
+
+### Project type and sector analytics
+![Sector Analytics](docs/screenshots/project_type_and_sector_analytics.png)
+
+### Project Explorer and Opportunity Score Distribution
+![Project Explorer](docs/screenshots/project_explorer_and_opportunity_score_distribution.png)
+
+### Detailed Project Information
+![Detailed Project Information](docs/screenshots/detailed_project_info.png)
+
 ## Results
 
 - Successfully analyzed 100+ infrastructure projects.
