@@ -71,6 +71,17 @@ CREATE TABLE IF NOT EXISTS trend_intelligence (
     trend_level TEXT
 )
 """)
+
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS daily_metrics (
+    metric_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    snapshot_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    total_projects INTEGER,
+    high_opportunities INTEGER,
+    avg_score REAL,
+    total_agencies INTEGER
+)
+""")
 conn.commit()
 conn.close()
 

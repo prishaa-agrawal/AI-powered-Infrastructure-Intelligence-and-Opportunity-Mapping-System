@@ -8,6 +8,7 @@ from opportunity_dashboard import show_opportunities
 from alerts_dashboard import show_alerts
 from agency_dashboard import show_agency_intelligence
 from trend_dashboard import show_trend_intelligence
+from history_dashboard import show_historical_trends
 
 sys.path.append(
     os.path.abspath(
@@ -141,6 +142,7 @@ show_opportunities()
 show_alerts()
 show_agency_intelligence()
 show_trend_intelligence()
+show_historical_trends()
 
 st.download_button(
     label="⬇ Download Project Data",

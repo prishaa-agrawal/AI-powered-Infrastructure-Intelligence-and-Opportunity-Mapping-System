@@ -44,7 +44,13 @@ if result != 0:
     logging.error("Report generation failed")
     print("Pipeline failed at report generation.")
     exit()
+print("\n[5/5] Saving historical metrics...")
+result = os.system("python src/scoring/historical_tracker.py")
 
+if result != 0:
+    logging.error("Historical tracking failed")
+    print("Pipeline failed at historical tracking.")
+    exit()
 print("\nPipeline completed successfully!")
 
 logging.info("Pipeline Completed Successfully")
