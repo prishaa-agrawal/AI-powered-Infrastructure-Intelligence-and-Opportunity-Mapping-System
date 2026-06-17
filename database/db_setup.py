@@ -61,6 +61,16 @@ CREATE TABLE IF NOT EXISTS agency_intelligence (
     influence_level TEXT
 )
 """)
+
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS trend_intelligence (
+    trend_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    project_type TEXT,
+    project_count INTEGER,
+    avg_score REAL,
+    trend_level TEXT
+)
+""")
 conn.commit()
 conn.close()
 
