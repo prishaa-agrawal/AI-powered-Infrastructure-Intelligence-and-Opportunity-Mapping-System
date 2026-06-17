@@ -6,6 +6,7 @@ import sys
 import os
 from opportunity_dashboard import show_opportunities
 from alerts_dashboard import show_alerts
+from agency_dashboard import show_agency_intelligence
 
 sys.path.append(
     os.path.abspath(
@@ -137,6 +138,7 @@ with col4:
     )
 show_opportunities()
 show_alerts()
+show_agency_intelligence()
 
 st.download_button(
     label="⬇ Download Project Data",

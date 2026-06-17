@@ -51,6 +51,16 @@ CREATE TABLE IF NOT EXISTS alerts (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 )
 """)
+
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS agency_intelligence (
+    agency_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    agency_name TEXT,
+    project_count INTEGER,
+    avg_score REAL,
+    influence_level TEXT
+)
+""")
 conn.commit()
 conn.close()
 
