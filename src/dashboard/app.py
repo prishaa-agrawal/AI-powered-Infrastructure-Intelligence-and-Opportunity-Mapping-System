@@ -11,6 +11,7 @@ from trend_dashboard import show_trend_intelligence
 from history_dashboard import show_historical_trends
 from forecast_dashboard import show_forecast
 from risk_dashboard import show_risk_intelligence
+from executive_dashboard import show_executive_intelligence
 
 
 sys.path.append(
@@ -141,6 +142,7 @@ with col4:
         "Avg Score",
         round(df["opportunity_score"].mean(), 1)
     )
+show_executive_intelligence()
 show_opportunities()
 show_alerts()
 show_agency_intelligence()
@@ -148,6 +150,7 @@ show_trend_intelligence()
 show_historical_trends()
 show_forecast()
 show_risk_intelligence()
+
 
 st.download_button(
     label="⬇ Download Project Data",
