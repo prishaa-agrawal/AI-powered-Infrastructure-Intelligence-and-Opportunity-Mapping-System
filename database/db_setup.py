@@ -82,6 +82,16 @@ CREATE TABLE IF NOT EXISTS daily_metrics (
     total_agencies INTEGER
 )
 """)
+
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS risk_intelligence (
+    risk_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    project_name TEXT,
+    opportunity_score INTEGER,
+    risk_score INTEGER,
+    risk_level TEXT
+)
+""")
 conn.commit()
 conn.close()
 

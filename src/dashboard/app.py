@@ -10,6 +10,8 @@ from agency_dashboard import show_agency_intelligence
 from trend_dashboard import show_trend_intelligence
 from history_dashboard import show_historical_trends
 from forecast_dashboard import show_forecast
+from risk_dashboard import show_risk_intelligence
+
 
 sys.path.append(
     os.path.abspath(
@@ -145,6 +147,7 @@ show_agency_intelligence()
 show_trend_intelligence()
 show_historical_trends()
 show_forecast()
+show_risk_intelligence()
 
 st.download_button(
     label="⬇ Download Project Data",
