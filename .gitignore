@@ -1,0 +1,12 @@
+# Email credentials
+src/alerts/email_config.py
+
+# Python
+__pycache__/
+*.pyc
+
+# Environment files
+.env
+
+# Logs
+*.log
