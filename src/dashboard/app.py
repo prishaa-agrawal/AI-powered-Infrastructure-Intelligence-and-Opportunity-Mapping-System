@@ -14,6 +14,8 @@ from risk_dashboard import show_risk_intelligence
 from executive_dashboard import show_executive_intelligence
 
 
+
+
 sys.path.append(
     os.path.abspath(
         os.path.join(
@@ -22,6 +24,7 @@ sys.path.append(
         )
     )
 )
+from intelligence.opportunity_briefs import generate_brief
 
 from reports.generate_report import generate_pdf
 
@@ -684,6 +687,53 @@ else:
                 "**Rank:**",
                 row.get("rank", "N/A")
             )
+
+            if st.button(
+                f"🧠 Generate AI Brief - {project_name}",
+                key=f"brief_{project_name}"
+            ):
+
+                score = int(
+                    row.get("opportunity_score", 0)
+                )
+
+                if score >= 70:
+                    risk_level = "Low"
+                elif score >= 40:
+                    risk_level = "Medium"
+                else:
+                    risk_level = "High"
+
+                brief = generate_brief(
+                    project_name=row.get(
+                        "project_name",
+                        ""
+                ),
+                    agency=row.get(
+                    "agency",
+                    ""
+                ),
+                    project_type=row.get(
+                    "project_type",
+                    ""
+                ),
+                    budget=row.get(
+                    "budget",
+                    ""
+                ),
+                    location=row.get(
+                    "location",
+                    ""
+                ),
+                    score=score,
+                    risk_level=risk_level
+                )
+
+                st.text_area(
+                    "AI Opportunity Brief",
+                    brief,
+                    height=450
+                )
 
 st.divider()
 
