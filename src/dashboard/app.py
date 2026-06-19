@@ -12,6 +12,7 @@ from history_dashboard import show_historical_trends
 from forecast_dashboard import show_forecast
 from risk_dashboard import show_risk_intelligence
 from executive_dashboard import show_executive_intelligence
+from portfolio_dashboard import show_portfolio_intelligence
 
 
 
@@ -153,6 +154,7 @@ show_trend_intelligence()
 show_historical_trends()
 show_forecast()
 show_risk_intelligence()
+show_portfolio_intelligence(df)
 
 
 st.download_button(
