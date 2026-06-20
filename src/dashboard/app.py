@@ -14,6 +14,7 @@ from risk_dashboard import show_risk_intelligence
 from executive_dashboard import show_executive_intelligence
 from portfolio_dashboard import show_portfolio_intelligence
 from agency_ranking_dashboard import show_agency_ranking
+from agency_diversification_dashboard import show_agency_diversification
 
 
 
@@ -157,6 +158,7 @@ show_forecast()
 show_risk_intelligence()
 show_portfolio_intelligence(df)
 show_agency_ranking(df)
+show_agency_diversification(df)
 
 
 st.download_button(
